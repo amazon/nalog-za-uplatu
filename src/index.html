@@ -23,7 +23,7 @@
         
         .uplatnica {
             width: 190mm;
-            height: 95mm;
+            height: 94mm;
             background: #ffffff;
             border: 2px solid #000 !important;
             box-sizing: border-box;
@@ -298,9 +298,9 @@
                         ];
                         
                         // Only add optional fields if they exist
-                        if (slip.receiver) fields.push('P:' + transliterate(slip.receiver).substring(0, 30));
+                        if (slip.receiver) fields.push('P:' + transliterate(slip.receiver).substring(0, 35));
                         if (slip.paymentCode) fields.push('SF:' + slip.paymentCode.substring(0, 3));
-                        if (slip.purpose) fields.push('S:' + transliterate(slip.purpose).substring(0, 25));
+                        if (slip.purpose) fields.push('S:' + transliterate(slip.purpose).substring(0, 35));
                         if (slip.referenceNumber) fields.push('RO:' + slip.model + slip.referenceNumber.substring(0, 20));
                         
                         const qrString = fields.join('|');
