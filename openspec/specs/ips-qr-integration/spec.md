@@ -8,7 +8,9 @@ The system SHALL provide a global toggle to show or hide the IPS QR code on all 
 - **THEN** all payment slips either show or hide their respective IPS QR code
 
 ### Requirement: Generate IPS QR Code
-The system SHALL generate an IPS QR code for each payment slip based on its current data.
+The system SHALL generate an IPS QR code for each payment slip based on its current data. When building the QR string, optional text fields SHALL be truncated to the following limits:
+- Receiver (`P:`) — maximum 35 characters
+- Purpose (`S:`) — maximum 35 characters
 
 #### Scenario: Rendering QR code
 - **WHEN** the IPS code toggle is enabled and valid data is present in a slip

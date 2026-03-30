@@ -41,6 +41,7 @@ The system SHALL format the payment slips for printing, hiding UI controls and f
 - Right-side input fields compacted to minimal height (28px)
 - QR code sized at 135×135 pixels positioned below the model/reference number field
 - Zero top padding on the slip container to maximize usable space
+- Each slip height set to 94mm
 
 #### Scenario: Printing slips
 - **WHEN** the user triggers the browser print dialog (e.g., via a "Print" button)
