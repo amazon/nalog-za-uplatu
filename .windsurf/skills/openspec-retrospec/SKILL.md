@@ -39,11 +39,16 @@ When done, the change is ready to archive immediately.
 
 2. **Determine the change name**
 
-   If the user provided a name, use it.
+   If no active changes found, proceed with the user-provided name or derive one from the diff.
 
-   Otherwise, derive a short kebab-case name from the diff content (e.g., changes to height and QR field lengths → `adjust-slip-dimensions-and-qr-fields`).
+   If there are one or more active changes, use the **AskUserQuestion tool** to ask the user which one to continue or create a new one.
 
-   **Do NOT ask the user** unless the diff is completely ambiguous (empty or binary-only).
+   If the user chooses to continue an existing change, use that change name.
+
+   If the user provided a name, use it for the new change.
+
+   If the user chose to create a new change and did not provide a name, derive a short kebab-case name from the diff content (e.g., changes to height and QR field lengths → `adjust-slip-dimensions-and-qr-fields`).
+   **DO NOT ask the user for a name** in case there is only one active change AND user didn't provide a name.
 
 3. **Create the change directory**
 

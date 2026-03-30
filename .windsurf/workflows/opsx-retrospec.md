@@ -36,12 +36,17 @@ When done, the change is ready to archive immediately.
 
 2. **Determine the change name**
 
-   If the user provided a name, use it.
+   If no active changes found, proceed with the user-provided name or derive one from the diff.
 
-   Otherwise, derive a short kebab-case name from the diff content (e.g., changes to height and QR field lengths → `adjust-slip-dimensions-and-qr-fields`).
+   If there are one or more active changes, use the **AskUserQuestion tool** to ask the user which one to continue or create a new one.
 
-   **Do NOT ask the user** unless the diff is completely ambiguous (empty or binary-only).
+   If the user chooses to continue an existing change, use that change name.
 
+   If the user provided a name, use it for the new change.
+
+   If the user chose to create a new change and did not provide a name, derive a short kebab-case name from the diff content (e.g., changes to height and QR field lengths → `adjust-slip-dimensions-and-qr-fields`).
+   **DO NOT ask the user for a name** in case there is only one active change AND user didn't provide a name.
+   
 3. **Create the change directory**
 
    ```bash
@@ -104,14 +109,15 @@ When done, the change is ready to archive immediately.
    - Change name and location
    - Artifacts created with one-line descriptions
    - "All artifacts created and verified against staged diff."
-   - Prompt the user:
-     > "These changes are already applied. Run `/opsx:archive` to archive this change, or ask me to do it."
+   - Prompt the user to archive.
+
+   **Prompt options:**
+   - "Archive now", "I'll do it later"
 
 7. **Archive after user confirms**
 
-   Wait for user confirmation to archive (explicit reply or `/opsx:archive`).
-
-   When confirmed, invoke the archive workflow for this change (follow the opsx-archive workflow).
+   If user chooses "Archive now", use Task tool (subagent_type: "general-purpose", prompt: "Use Skill tool to invoke openspec-archive for change '<name>'.")
+   If "I'll do it later", tell the user to run `/opsx:archive` when ready.
 
 ---
 
