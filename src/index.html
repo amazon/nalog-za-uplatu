@@ -96,6 +96,9 @@
         <button @click="addSlip()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded transition-colors">
             Add payment slip
         </button>
+        <button @click="shareSlips()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded transition-colors">
+            Share
+        </button>
         <div class="flex items-center gap-2 border-l pl-4">
             <label class="flex items-center cursor-pointer">
                 <input type="checkbox" x-model="showIpsCode" class="mr-2 w-5 h-5">
@@ -201,6 +204,11 @@
         
     </div>
 
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg text-white font-semibold hidden transition-opacity duration-300 z-50" style="opacity: 0;">
+        <span id="toast-message"></span>
+    </div>
+
     <script>
         function paymentSlips() {
             return {
@@ -244,6 +252,148 @@
                     } else {
                         alert('Cannot remove the last slip. At least one slip must remain.');
                     }
+                },
+                
+                // Share functionality - Generate QR string for a slip
+                generateQRString(slip) {
+                    const transliterate = (text) => {
+                        if (!text) return '';
+                        const cyrToLat = {
+                            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'ђ': 'dj', 'е': 'e', 'ж': 'z', 'з': 'z',
+                            'и': 'i', 'ј': 'j', 'к': 'k', 'л': 'l', 'љ': 'lj', 'м': 'm', 'н': 'n', 'њ': 'nj', 'о': 'o',
+                            'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'ћ': 'c', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
+                            'ч': 'c', 'џ': 'dz', 'ш': 's',
+                            'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Ђ': 'Dj', 'Е': 'E', 'Ж': 'Z', 'З': 'Z',
+                            'И': 'I', 'Ј': 'J', 'К': 'K', 'Л': 'L', 'Љ': 'Lj', 'М': 'M', 'Н': 'N', 'Њ': 'Nj', 'О': 'O',
+                            'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'Ћ': 'C', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C',
+                            'Ч': 'C', 'Џ': 'Dz', 'Ш': 'S'
+                        };
+                        return text.split('').map(c => cyrToLat[c] || c).join('');
+                    };
+                    
+                    let amount = slip.amount || '';
+                    amount = amount.replace(/^=\s*/, '').replace(/\./g, '').replace(',', '.');
+                    const amountNum = parseFloat(amount) || 0;
+                    
+                    let account = (slip.accountNumber || '').replace(/-/g, '');
+                    if (account.length >= 2 && account.length < 18) {
+                        account = account.substring(0, 2) + account.substring(2).padStart(16, '0');
+                    }
+                    
+                    const fields = [
+                        'K:PR',
+                        'V:01',
+                        'C:1',
+                        'R:' + account,
+                        'N:' + transliterate(slip.payer).substring(0, 30),
+                        'I:RSD' + amountNum.toFixed(2).replace('.', ',')
+                    ];
+                    
+                    if (slip.receiver) fields.push('P:' + transliterate(slip.receiver).substring(0, 35));
+                    if (slip.paymentCode) fields.push('SF:' + slip.paymentCode.substring(0, 3));
+                    if (slip.purpose) fields.push('S:' + transliterate(slip.purpose).substring(0, 35));
+                    if (slip.referenceNumber) fields.push('RO:' + slip.model + slip.referenceNumber.substring(0, 20));
+                    
+                    return fields.join('|');
+                },
+                
+                // Share functionality - Sparse encode slips data
+                sparseEncodeSlips() {
+                    const qrStrings = this.slips.map(slip => this.generateQRString(slip));
+                    
+                    // Parse QR strings into field arrays
+                    const parseQR = (qr) => {
+                        const fields = {};
+                        qr.split('|').forEach(field => {
+                            const [key, value] = field.split(':');
+                            if (key && value !== undefined) fields[key] = value;
+                        });
+                        return fields;
+                    };
+                    
+                    const parsed = qrStrings.map(parseQR);
+                    const fieldOrder = ['K', 'V', 'C', 'R', 'N', 'I', 'P', 'SF', 'S', 'RO'];
+                    
+                    // Apply sparse encoding: replace duplicate values with empty string
+                    const sparse = parsed.map((fields, index) => {
+                        const prev = index > 0 ? parsed[index - 1] : null;
+                        const sparseFields = [];
+                        
+                        fieldOrder.forEach(key => {
+                            const value = fields[key] || '';
+                            const prevValue = prev ? (prev[key] || '') : null;
+                            // If same as previous, use empty string
+                            const output = (prev !== null && value === prevValue) ? '' : value;
+                            if (fields.hasOwnProperty(key) || output) {
+                                sparseFields.push(key + ':' + output);
+                            }
+                        });
+                        
+                        return sparseFields.join('|');
+                    });
+                    
+                    return sparse.join('\n');
+                },
+                
+                // Share functionality - Base64 URL-safe encode
+                base64UrlSafeEncode(str) {
+                    // Convert string to base64
+                    let base64;
+                    try {
+                        base64 = btoa(unescape(encodeURIComponent(str)));
+                    } catch (e) {
+                        // Fallback for Unicode
+                        base64 = btoa(str);
+                    }
+                    // Make URL-safe: replace + with -, / with _, remove = padding
+                    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+                },
+                
+                // Share functionality - Main share handler
+                async shareSlips() {
+                    try {
+                        // Generate sparse encoded data
+                        const sparseData = this.sparseEncodeSlips();
+                        
+                        // Base64 URL-safe encode
+                        const encoded = this.base64UrlSafeEncode(sparseData);
+                        
+                        // Construct URL with version prefix
+                        const url = window.location.origin + '/s/v1/' + encoded;
+                        
+                        // Copy to clipboard
+                        await navigator.clipboard.writeText(url);
+                        
+                        // Show success toast
+                        this.showToast('URL copied to clipboard!', 'success');
+                    } catch (error) {
+                        console.error('Share failed:', error);
+                        this.showToast('Failed to copy URL. Please try again.', 'error');
+                    }
+                },
+                
+                // Toast notification function
+                showToast(message, type = 'success') {
+                    const toast = document.getElementById('toast');
+                    const toastMessage = document.getElementById('toast-message');
+                    
+                    if (!toast || !toastMessage) return;
+                    
+                    // Set message and style based on type
+                    toastMessage.textContent = message;
+                    toast.classList.remove('hidden', 'bg-green-600', 'bg-red-600');
+                    toast.classList.add(type === 'success' ? 'bg-green-600' : 'bg-red-600');
+                    
+                    // Show toast
+                    toast.style.opacity = '1';
+                    
+                    // Auto-hide after 3 seconds
+                    setTimeout(() => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => {
+                            toast.classList.add('hidden');
+                        }, 300);
+                    }, 3000);
                 },
                 
                 generateQR(slip) {
