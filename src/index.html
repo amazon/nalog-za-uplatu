@@ -111,7 +111,7 @@
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
 </head>
-<body class="bg-gray-200 p-5 flex flex-col items-center min-h-screen" x-data="paymentSlips()">
+<body class="bg-gray-200 p-5 flex flex-col items-center min-h-screen" x-data="paymentSlips()" x-init="init()">
 
     <!-- Print Controls -->
     <div class="print-controls bg-white px-8 py-4 rounded-lg shadow-md mb-5 sticky top-5 z-50 flex items-center gap-4 print:hidden">
@@ -419,6 +419,134 @@
                             toast.classList.add('hidden');
                         }, 300);
                     }, 3000);
+                },
+
+                // URL Data Decoder - Base64 URL-safe decode
+                base64UrlSafeDecode(str) {
+                    // Reverse URL-safe encoding: replace - with +, _ with /
+                    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+                    // Add padding if needed
+                    const padLen = 4 - (base64.length % 4);
+                    if (padLen !== 4) {
+                        base64 += '='.repeat(padLen);
+                    }
+                    // Decode base64
+                    try {
+                        return decodeURIComponent(escape(atob(base64)));
+                    } catch (e) {
+                        throw new Error('Failed to decode base64 data');
+                    }
+                },
+
+                // URL Data Decoder - Parse share URL and load data
+                parseShareUrl() {
+                    const path = window.location.pathname;
+                    const match = path.match(/^\/s\/v(\d+)\/(.+)$/);
+                    
+                    if (!match) return false;
+                    
+                    const version = match[1];
+                    const encodedData = match[2];
+                    
+                    if (version !== '1') {
+                        this.showToast('Unsupported share URL version: v' + version, 'error');
+                        return false;
+                    }
+                    
+                    try {
+                        const decoded = this.base64UrlSafeDecode(encodedData);
+                        const slips = this.decodeV1(decoded);
+                        
+                        if (slips.length > 0) {
+                            this.slips = slips;
+                            this.showToast('Payment slips loaded from URL!', 'success');
+                            return true;
+                        }
+                    } catch (error) {
+                        console.error('Failed to decode share URL:', error);
+                        this.showToast('Invalid share URL data', 'error');
+                    }
+                    
+                    return false;
+                },
+
+                // URL Data Decoder - v1 decoder with de-sparsification
+                decodeV1(decoded) {
+                    const lines = decoded.split('\n').filter(line => line.trim());
+                    const fieldOrder = ['K', 'V', 'C', 'R', 'N', 'I', 'P', 'SF', 'S', 'RO'];
+                    const slips = [];
+                    let prevFields = null;
+                    
+                    for (const line of lines) {
+                        const fields = {};
+                        line.split('|').forEach(field => {
+                            const [key, value] = field.split(':');
+                            if (key) fields[key] = value || '';
+                        });
+                        
+                        // De-sparsify: fill empty fields from previous slip
+                        if (prevFields) {
+                            fieldOrder.forEach(key => {
+                                if (!fields[key] && prevFields[key]) {
+                                    fields[key] = prevFields[key];
+                                }
+                            });
+                        }
+                        
+                        prevFields = {...fields};
+                        const slip = this.qrFieldsToSlip(fields);
+                        slips.push(slip);
+                    }
+                    
+                    return slips;
+                },
+
+                // URL Data Decoder - Convert QR fields to slip object
+                qrFieldsToSlip(fields) {
+                    // Parse amount from I field (format: RSDxx,xx or RSDxxx.xx)
+                    let amount = '';
+                    if (fields.I) {
+                        const amountMatch = fields.I.match(/RSD([\d,\.]+)/);
+                        if (amountMatch) {
+                            amount = '= ' + amountMatch[1].replace('.', ',');
+                        }
+                    }
+                    
+                    // Parse account number (add dashes)
+                    let accountNumber = fields.R || '';
+                    if (accountNumber.length === 18) {
+                        accountNumber = accountNumber.substring(0, 3) + '-' + 
+                                       accountNumber.substring(3, 15) + '-' + 
+                                       accountNumber.substring(15, 18);
+                    }
+                    
+                    // Parse model and reference from RO field
+                    let model = '97';
+                    let referenceNumber = '';
+                    if (fields.RO && fields.RO.length >= 2) {
+                        model = fields.RO.substring(0, 2);
+                        referenceNumber = fields.RO.substring(2);
+                    }
+                    
+                    return {
+                        payer: fields.N || '',
+                        purpose: fields.S || '',
+                        receiver: fields.P || '',
+                        paymentCode: fields.SF || '253',
+                        currency: 'дин.',
+                        amount: amount,
+                        accountNumber: accountNumber,
+                        model: model,
+                        referenceNumber: referenceNumber
+                    };
+                },
+
+                // Initialize - Check for share URL on load
+                init() {
+                    // Small delay to ensure Alpine is fully initialized
+                    setTimeout(() => {
+                        this.parseShareUrl();
+                    }, 100);
                 },
                 
                 generateQR(slip) {
