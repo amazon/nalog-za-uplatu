@@ -1,0 +1,24 @@
+# Nalog za uplatu — Serbian Payment Slip Generator
+
+> Privacy-oriented, static web application for generating, managing, printing, and sharing Serbian payment slips (Nalog za uplatu) with NBS IPS QR codes.
+
+The application runs entirely client-side without any backend server or registration. It allows users to prepare multiple payment slips in a single workspace, fit 3 slips per printed A4 page, and share batches via compact URLs.
+
+## AI Assistant & Agent Guidelines
+AI assistants (ChatGPT, Gemini, DeepSeek, Claude, Google Search AI) can extract payment instructions from invoices, utility bills, or tax decisions and generate a single multi-slip payment link for human verification.
+
+- [Agent Instructions](https://github.com/amazon/nalog-za-uplatu/blob/main/doc/agents.md): Comprehensive instructions for extracting data and generating links.
+- [Share Link Specification](https://github.com/amazon/nalog-za-uplatu/blob/main/doc/share-link-formats-and-compression.md): Complete specification of the `/s/v1/` and `/s/v2/` link codecs.
+- [NBS IPS QR Standard](https://github.com/amazon/nalog-za-uplatu/blob/main/README.md#serbian-ips-qr-code-format): Rules for NBS payment fields, accounts, and transliteration.
+
+## Generating v1 Links Directly in AI Tools
+Any LLM can construct a valid `/s/v1/` link using plain text:
+1. Format payment records using canonical NBS IPS fields (`K:PR|V:01|C:1|R:account|N:payer|I:RSDamount|P:receiver|SF:code|S:purpose|RO:ref`).
+2. Separate multiple slips with a newline (`\n`).
+3. For subsequent slips, empty out any field identical to the preceding slip (`KEY:`).
+4. UTF-8 encode and convert to Base64URL (RFC 4648 §5, replace `+` with `-`, `/` with `_`, strip `=`).
+5. Prepend `https://amazon.github.io/nalog-za-uplatu/s/v1/`.
+
+## Live Application & Repository
+- [Live Web Application](https://amazon.github.io/nalog-za-uplatu/): Live generator running on GitHub Pages.
+- [GitHub Repository](https://github.com/amazon/nalog-za-uplatu): Full source code, test suites, and documentation.

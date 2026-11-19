@@ -31,11 +31,14 @@ A frontend-only web application for generating Serbian payment slips (Nalog za u
 ```
 ├── src/
 │   ├── index.html          # Main application page
+│   ├── llms.txt            # Machine-readable context for AI models & agents
 │   ├── main.ts             # Browser module entry point
 │   ├── share-links.ts      # v1 and optional IPQ2 v2 share links
 │   └── ipq2/               # Browser-compatible IPQ2 codec
 ├── doc/
+│   ├── agents.md           # Instructions for AI assistants (ChatGPT, Gemini, DeepSeek, etc.)
 │   └── share-link-formats-and-compression.md # Detailed specification of share links & codecs
+├── llms.txt                # Root copy of AI context file
 └── openspec/
     └── changes/
         └── frontend-payslip-generator/
@@ -98,4 +101,13 @@ The application supports generating sharable URLs containing multi-slip payment 
 - **IPQ2** ([IPQ2.md](IPQ2.md)): Evolution of IPQ1 using Zstandard dictionary compression, a 2,831-term word-boundary token table derived from Serbian and English payment terms, an 8-byte vocabulary integrity fingerprint, and 3 adaptive representation modes (raw text, semantic, and tokenized semantic).
 
 For the complete technical specification of both wire formats and compression pipelines, see [doc/share-link-formats-and-compression.md](doc/share-link-formats-and-compression.md).
+
+## AI Assistant & Agent Integration
+
+The application is designed to be agent-friendly:
+
+- **[`llms.txt`](llms.txt)**: Provides a machine-readable entry point per the [llms.txt standard](https://llmstxt.org).
+- **[`doc/agents.md`](doc/agents.md)**: Comprehensive guidelines and prompt templates for ChatGPT, Gemini, DeepSeek, and Google Search AI mode to parse invoices and generate working `/s/v1/` multi-slip links.
+- **Direct Link Generation**: Because `/s/v1/` uses text-based sparsification and standard Base64URL, any LLM can construct valid payment links directly without executing complex compression libraries.
+
 

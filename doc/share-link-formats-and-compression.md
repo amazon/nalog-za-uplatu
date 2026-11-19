@@ -373,3 +373,12 @@ GitHub Pages serves the static site using Jekyll. To allow links like `/s/v1/...
 - On window load, Alpine.js checks `window.location.pathname`.
 - `parseSharePath()` detects version 1 or version 2.
 - Payment slips are unpacked and automatically populated into the form.
+
+---
+
+## 5. AI Assistant & Agent Direct Generation
+
+Because the v1 link format relies on simple line-based text sparsification and RFC 4648 §5 Base64URL encoding (without binary dictionary compressors), AI models (ChatGPT, Gemini, DeepSeek, Claude) can generate valid share links directly in conversation from user-provided invoices or bills.
+
+For step-by-step agent instructions, transliteration tables, and prompt templates, see [doc/agents.md](agents.md) and [llms.txt](../llms.txt).
+
