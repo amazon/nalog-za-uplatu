@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nalozi za uplatu - Poreska Uprava</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- AlpineJS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- QRCode.js for rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Browser IPQ2 and share-link codec -->
+    <script>
+        (function() {
+            var basePath = window.location.pathname
+                .replace(/\/s\/v\d+\/.*$/, '')
+                .replace(/\/index\.html$/, '')
+                .replace(/\/+$/, '');
+            window.shareCodecReady = import(window.location.origin + basePath + '/assets/ipq2.js');
+        })();
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
+        
+        body {
+            font-family: Arial, sans-serif;
+        }
+        
+        .value-font {
+            font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+        }
+        
+        .uplatnica {
+            width: 190mm;
+            height: 94mm;
+            background: #ffffff;
+            border: 2px solid #000 !important;
+            box-sizing: border-box;
+            padding: 0mm 10mm;
+            margin-bottom: 8mm;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        .field-input {
+            font-family: 'Courier Prime', 'Courier New', Courier, monospace;
+            font-size: 14px;
+            font-weight: bold;
+            background: transparent;
+            border: none;
+            width: 100%;
+            outline: none;
+            padding: 0;
+        }
+        
+        .field-input:focus {
+            background: #f0f8ff;
+        }
+        
+        .text-area .field-input {
+            min-height: 30px;
+            resize: none;
+        }
+        
+        /* Print optimizations */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 5mm 0;
+            }
+            body { 
+                background: none !important; 
+                padding: 0 !important; 
+            }
+            .print-controls { 
+                display: none !important; 
+            }
+            .page-container { 
+                box-shadow: none !important; 
+                padding-top: 0 !important;
+                padding-bottom: 0 !important;
+                margin: 0 !important; 
+                width: 210mm !important;
+                background: none !important;
+            }
+            .uplatnica { 
+                page-break-inside: avoid; 
+                margin-bottom: 1mm !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+
+    <!-- Start Single Page Apps for GitHub Pages -->
+    <script type="text/javascript">
+      // Single Page Apps for GitHub Pages
+      // MIT License
+      // https://github.com/rafgraph/spa-github-pages
+      // This script checks to see if a redirect is present in the query string,
+      // converts it back into the correct url and adds it to the
+      // browser's history using window.history.replaceState(...),
+      // which won't cause the browser to attempt to load the new url.
+      // When the single page app is loaded further down in this file,
+      // the correct url will be waiting in the browser's history for
+      // the single page app to route accordingly.
+      (function(l) {
+        if (l.search[1] === '/' ) {
+          var decoded = l.search.slice(1).split('&').map(function(s) { 
+            return s.replace(/~and~/g, '&')
+          }).join('?');
+          window.history.replaceState(null, null,
+              l.pathname.slice(0, -1) + decoded + l.hash
+          );
+        }
+      }(window.location))
+    </script>
+    <!-- End Single Page Apps for GitHub Pages -->
+</head>
+<body class="bg-gray-200 p-5 flex flex-col items-center min-h-screen" x-data="paymentSlips()" x-init="init()">
+
+    <!-- Print Controls -->
+    <div class="print-controls bg-white px-8 py-4 rounded-lg shadow-md mb-5 sticky top-5 z-50 flex flex-wrap items-center gap-4 print:hidden">
+        <button @click="window.print()" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded transition-colors">
+            Print Slips
+        </button>
+        <button @click="addSlip()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded transition-colors">
+            Add payment slip
+        </button>
+        <button @click="shareSlips()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded transition-colors">
+            Share
+        </button>
+        <div class="flex items-center gap-2 border-l pl-4">
+            <label class="flex items-center cursor-pointer" title="Use IPQ2 compression for shorter share links">
+                <input type="checkbox" x-model="shareWithIpq2" class="mr-2 w-5 h-5" aria-label="Compress share link with IPQ2">
+                <span class="font-semibold text-gray-700">Short link (IPQ2)</span>
+            </label>
+        </div>
+        <div class="flex items-center gap-2 border-l pl-4">
+            <label class="flex items-center cursor-pointer">
+                <input type="checkbox" x-model="showIpsCode" class="mr-2 w-5 h-5">
+                <span class="font-semibold text-gray-700">IPS code</span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Page Container -->
+    <div class="page-container bg-white py-[15mm] shadow-lg flex flex-col items-center" style="width: 210mm;">
+        
+        <template x-for="(slip, index) in slips" :key="index">
+            <div class="uplatnica">
+                <!-- Action buttons (hidden when printing) -->
+                <div class="no-print absolute top-2 right-2 flex gap-2 z-10">
+                    <button @click="copySlip(index)" 
+                            class="bg-blue-500 hover:bg-blue-600 text-white text-xs px-2 py-1 rounded transition-colors"
+                            title="Copy slip">
+                        Copy
+                    </button>
+                    <button @click="removeSlip(index)" 
+                            class="bg-red-500 hover:bg-red-600 text-white text-xs px-2 py-1 rounded transition-colors"
+                            title="Remove slip">
+                        Remove
+                    </button>
+                </div>
+                
+                <div class="text-center font-bold text-base mt-[2mm] mb-[2mm] tracking-wide">НАЛОГ ЗА УПЛАТУ</div>
+                
+                <div class="flex justify-between gap-5 flex-grow">
+                    <!-- Left Column -->
+                    <div class="w-[45%] flex flex-col gap-3">
+                        <div class="flex flex-col w-full">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">уплатилац</span>
+                            <div class="border border-black bg-white min-h-[40px] flex items-end p-1 pl-2 box-border">
+                                <input type="text" x-model="slip.payer" class="field-input w-full" placeholder="Ime i prezime / Firma">
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">сврха уплате</span>
+                            <div class="border border-black bg-white min-h-[40px] flex items-end p-1 pl-2 box-border">
+                                <input type="text" x-model="slip.purpose" class="field-input w-full" placeholder="Svrha uplate">
+                            </div>
+                        </div>
+                        <div class="flex flex-col w-full">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">прималац</span>
+                            <div class="border border-black bg-white min-h-[40px] flex items-end p-1 pl-2 box-border">
+                                <input type="text" x-model="slip.receiver" class="field-input w-full" placeholder="Primaoac">
+                            </div>
+                        </div>
+                        <div class="absolute bottom-[10mm] left-[10mm] flex flex-col w-[25%]">
+                            <div class="border-b border-black min-h-[28px] flex items-end px-1 box-border">
+                                <input type="text" x-model="slip.signature" class="field-input w-full" aria-label="Потпис платиоца">
+                            </div>
+                            <span class="mt-0.5 text-[10px] text-gray-700 leading-tight">потпис платиоца</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column -->
+                    <div class="w-[55%] flex flex-col">
+                        <div class="flex gap-2.5 w-full">
+                            <div class="w-[15%] flex flex-col">
+                                <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">шифра<br>плаћања</span>
+                                <div class="border border-black bg-white min-h-[28px] flex items-center justify-center p-0 px-1 box-border">
+                                    <input type="text" x-model="slip.paymentCode" class="field-input text-center" placeholder="253">
+                                </div>
+                            </div>
+                            <div class="w-[15%] flex flex-col">
+                                <span class="text-[10px] text-gray-700 mb-0.5 leading-tight"><br>валута</span>
+                                <div class="border border-black bg-white min-h-[28px] flex items-center justify-center p-0 px-1 box-border">
+                                    <input type="text" x-model="slip.currency" class="field-input text-center" placeholder="дин.">
+                                </div>
+                            </div>
+                            <div class="w-[70%] flex flex-col">
+                                <span class="text-[10px] text-gray-700 mb-0.5 leading-tight"><br>износ</span>
+                                <div class="border border-black bg-white min-h-[28px] flex items-center justify-end pr-2.5 box-border">
+                                    <input type="text" x-model="slip.amount" class="field-input text-right" placeholder="= 0,00">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-2 flex flex-col w-full">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">рачун примаоца</span>
+                            <div class="border border-black bg-white min-h-[28px] flex items-center p-0 px-1 box-border">
+                                <input type="text" x-model="slip.accountNumber" class="field-input w-full" placeholder="840-xxxxxxxx-xx">
+                            </div>
+                        </div>
+                        
+                        <div class="mt-2 flex flex-col w-full">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">модел и позив на број (одобрење)</span>
+                            <div class="flex gap-2.5 w-full">
+                                <div class="w-[15%] border border-black bg-white min-h-[28px] flex items-center justify-center p-0 px-1 box-border">
+                                    <input type="text" x-model="slip.model" class="field-input text-center" placeholder="97">
+                                </div>
+                                <div class="w-[85%] border border-black bg-white min-h-[28px] flex items-center p-0 px-1 box-border">
+                                    <input type="text" x-model="slip.referenceNumber" class="field-input w-full" placeholder="Poziv na broj">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-[10mm] right-[50mm] flex flex-col w-[25%]">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">место и датум пријема</span>
+                            <div class="border-b border-black min-h-[28px] flex items-end px-1 box-border">
+                                <input type="text" x-model="slip.receiptPlaceAndDate" class="field-input w-full" aria-label="Место и датум пријема">
+                            </div>
+                        </div>
+                        
+                        <!-- IPS QR Code -->
+                        <div class="mt-3 flex justify-end" x-show="showIpsCode">
+                            <div x-html="generateQR(slip)" class="qr-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+        
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-lg shadow-lg text-white font-semibold hidden transition-opacity duration-300 z-50" style="opacity: 0;">
+        <span id="toast-message"></span>
+    </div>
+
+    <script>
+        function paymentSlips() {
+            return {
+                showIpsCode: false,
+                shareWithIpq2: false,
+                shareComparison: null,
+                slips: [
+                    {
+                        payer: '',
+                        purpose: '',
+                        receiver: '',
+                        paymentCode: '253',
+                        currency: 'дин.',
+                        amount: '',
+                        accountNumber: '',
+                        model: '97',
+                        referenceNumber: '',
+                        signature: '',
+                        receiptPlaceAndDate: ''
+                    },
+                ],
+                
+                addSlip() {
+                    this.slips.push({
+                        payer: '',
+                        purpose: '',
+                        receiver: '',
+                        paymentCode: '253',
+                        currency: 'дин.',
+                        amount: '',
+                        accountNumber: '',
+                        model: '97',
+                        referenceNumber: '',
+                        signature: '',
+                        receiptPlaceAndDate: ''
+                    });
+                },
+                
+                copySlip(index) {
+                    const slipToCopy = JSON.parse(JSON.stringify(this.slips[index]));
+                    this.slips.splice(index + 1, 0, slipToCopy);
+                },
+                
+                removeSlip(index) {
+                    if (this.slips.length > 1) {
+                        this.slips.splice(index, 1);
+                    } else {
+                        alert('Cannot remove the last slip. At least one slip must remain.');
+                    }
+                },
+                
+                // Share functionality - Generate QR string for a slip
+                generateQRString(slip) {
+                    const transliterate = (text) => {
+                        if (!text) return '';
+                        const cyrToLat = {
+                            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'ђ': 'dj', 'е': 'e', 'ж': 'z', 'з': 'z',
+                            'и': 'i', 'ј': 'j', 'к': 'k', 'л': 'l', 'љ': 'lj', 'м': 'm', 'н': 'n', 'њ': 'nj', 'о': 'o',
+                            'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'ћ': 'c', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
+                            'ч': 'c', 'џ': 'dz', 'ш': 's',
+                            'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Ђ': 'Dj', 'Е': 'E', 'Ж': 'Z', 'З': 'Z',
+                            'И': 'I', 'Ј': 'J', 'К': 'K', 'Л': 'L', 'Љ': 'Lj', 'М': 'M', 'Н': 'N', 'Њ': 'Nj', 'О': 'O',
+                            'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'Ћ': 'C', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C',
+                            'Ч': 'C', 'Џ': 'Dz', 'Ш': 'S'
+                        };
+                        return text.split('').map(c => cyrToLat[c] || c).join('');
+                    };
+                    
+                    let amount = slip.amount || '';
+                    amount = amount.replace(/^=\s*/, '').replace(/\./g, '').replace(',', '.');
+                    const amountNum = parseFloat(amount) || 0;
+                    
+                    let account = (slip.accountNumber || '').replace(/-/g, '');
+                    if (account.length >= 2 && account.length < 18) {
+                        account = account.substring(0, 2) + account.substring(2).padStart(16, '0');
+                    }
+                    
+                    const fields = [
+                        'K:PR',
+                        'V:01',
+                        'C:1',
+                        'R:' + account,
+                        'N:' + transliterate(slip.payer).substring(0, 30),
+                        'I:RSD' + amountNum.toFixed(2).replace('.', ',')
+                    ];
+                    
+                    if (slip.receiver) fields.push('P:' + transliterate(slip.receiver).substring(0, 35));
+                    if (slip.paymentCode) fields.push('SF:' + slip.paymentCode.substring(0, 3));
+                    if (slip.purpose) fields.push('S:' + transliterate(slip.purpose).substring(0, 35));
+                    if (slip.referenceNumber) fields.push('RO:' + slip.model + slip.referenceNumber.substring(0, 20));
+                    console.log('Generated QR string:', fields.join('|'));
+                    return fields.join('|');
+                },
+                
+                canonicalShareData() {
+                    return this.slips
+                        .map(slip => this.generateQRString(slip))
+                        .join('\n');
+                },
+
+                getAppBaseUrl() {
+                    const basePath = window.location.pathname
+                        .replace(/\/s\/v\d+\/.*$/, '')
+                        .replace(/\/index\.html$/, '')
+                        .replace(/\/+$/, '');
+                    return window.location.origin + basePath;
+                },
+
+                async buildShareUrls() {
+                    const codec = await window.shareCodecReady;
+                    const canonicalData = this.canonicalShareData();
+                    const baseUrl = this.getAppBaseUrl();
+                    return {
+                        legacy: codec.buildLegacyShareUrl(baseUrl, canonicalData),
+                        compressed: codec.buildCompressedShareUrl(baseUrl, canonicalData)
+                    };
+                },
+                
+                // Share functionality - Main share handler
+                async shareSlips() {
+                    try {
+                        const codec = await window.shareCodecReady;
+                        const canonicalData = this.canonicalShareData();
+                        const baseUrl = this.getAppBaseUrl();
+                        const legacyUrl = codec.buildLegacyShareUrl(baseUrl, canonicalData);
+                        let url = legacyUrl;
+                        let message = 'URL copied to clipboard!';
+
+                        if (this.shareWithIpq2) {
+                            const compressedUrl = codec.buildCompressedShareUrl(baseUrl, canonicalData);
+                            const charactersSaved = legacyUrl.length - compressedUrl.length;
+                            const percentSaved = Math.round((charactersSaved / legacyUrl.length) * 100);
+                            this.shareComparison = {
+                                legacyLength: legacyUrl.length,
+                                compressedLength: compressedUrl.length,
+                                charactersSaved,
+                                percentSaved
+                            };
+                            url = compressedUrl;
+                            message = charactersSaved > 0
+                                ? `Compressed URL copied — ${charactersSaved} characters shorter (${percentSaved}%).`
+                                : `Compressed URL copied — ${Math.abs(charactersSaved)} characters longer for this data.`;
+                        } else {
+                            this.shareComparison = null;
+                        }
+                        
+                        // Copy to clipboard
+                        await navigator.clipboard.writeText(url);
+                        
+                        // Show success toast
+                        this.showToast(message, 'success');
+                    } catch (error) {
+                        console.error('Share failed:', error);
+                        this.showToast('Failed to copy URL. Please try again.', 'error');
+                    }
+                },
+                
+                // Toast notification function
+                showToast(message, type = 'success') {
+                    const toast = document.getElementById('toast');
+                    const toastMessage = document.getElementById('toast-message');
+                    
+                    if (!toast || !toastMessage) return;
+                    
+                    // Set message and style based on type
+                    toastMessage.textContent = message;
+                    toast.classList.remove('hidden', 'bg-green-600', 'bg-red-600');
+                    toast.classList.add(type === 'success' ? 'bg-green-600' : 'bg-red-600');
+                    
+                    // Show toast
+                    toast.style.opacity = '1';
+                    
+                    // Auto-hide after 3 seconds
+                    setTimeout(() => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => {
+                            toast.classList.add('hidden');
+                        }, 300);
+                    }, 3000);
+                },
+
+                // URL Data Decoder - Parse share URL and load data
+                async parseShareUrl() {
+                    const path = window.location.pathname;
+                    try {
+                        const codec = await window.shareCodecReady;
+                        const parsed = codec.parseSharePath(path);
+                        if (!parsed) return false;
+                        if (parsed.version !== codec.LEGACY_SHARE_VERSION &&
+                            parsed.version !== codec.IPQ2_SHARE_VERSION) {
+                            this.showToast('Unsupported share URL version: v' + parsed.version, 'error');
+                            return false;
+                        }
+
+                        const decoded = codec.decodeShareData(parsed.version, parsed.encodedData);
+                        const slips = this.decodeV1(decoded);
+                        
+                        if (slips.length > 0) {
+                            this.slips = slips;
+                            this.showToast('Payment slips loaded from URL!', 'success');
+                            return true;
+                        }
+                    } catch (error) {
+                        console.error('Failed to decode share URL:', error);
+                        this.showToast('Invalid share URL data', 'error');
+                    }
+                    
+                    return false;
+                },
+
+                // URL Data Decoder - v1 decoder with de-sparsification
+                decodeV1(decoded) {
+                    const lines = decoded.split('\n').filter(line => line.trim());
+                    const fieldOrder = ['K', 'V', 'C', 'R', 'N', 'I', 'P', 'SF', 'S', 'RO'];
+                    const slips = [];
+                    let prevFields = null;
+                    
+                    for (const line of lines) {
+                        const fields = {};
+                        line.split('|').forEach(field => {
+                            const separator = field.indexOf(':');
+                            if (separator > 0) {
+                                const key = field.substring(0, separator);
+                                fields[key] = field.substring(separator + 1);
+                            }
+                        });
+                        
+                        // De-sparsify: fill empty fields from previous slip
+                        if (prevFields) {
+                            fieldOrder.forEach(key => {
+                                if (!fields[key] && prevFields[key]) {
+                                    fields[key] = prevFields[key];
+                                }
+                            });
+                        }
+                        
+                        prevFields = {...fields};
+                        const slip = this.qrFieldsToSlip(fields);
+                        slips.push(slip);
+                    }
+                    
+                    return slips;
+                },
+
+                // URL Data Decoder - Convert QR fields to slip object
+                qrFieldsToSlip(fields) {
+                    // Parse amount from I field (format: RSDxx,xx or RSDxxx.xx)
+                    let amount = '';
+                    if (fields.I) {
+                        const amountMatch = fields.I.match(/RSD([\d,\.]+)/);
+                        if (amountMatch) {
+                            amount = '= ' + amountMatch[1].replace('.', ',');
+                        }
+                    }
+                    
+                    // Parse account number (add dashes)
+                    let accountNumber = fields.R || '';
+                    if (accountNumber.length === 18) {
+                        accountNumber = accountNumber.substring(0, 3) + '-' +
+                                       accountNumber.substring(3, 16) + '-' +
+                                       accountNumber.substring(16, 18);
+                    }
+                    
+                    // Parse model and reference from RO field
+                    let model = '97';
+                    let referenceNumber = '';
+                    if (fields.RO && fields.RO.length >= 2) {
+                        model = fields.RO.substring(0, 2);
+                        referenceNumber = fields.RO.substring(2);
+                    }
+                    
+                    return {
+                        payer: fields.N || '',
+                        purpose: fields.S || '',
+                        receiver: fields.P || '',
+                        paymentCode: fields.SF || '253',
+                        currency: 'дин.',
+                        amount: amount,
+                        accountNumber: accountNumber,
+                        model: model,
+                        referenceNumber: referenceNumber,
+                        signature: '',
+                        receiptPlaceAndDate: ''
+                    };
+                },
+
+                // Initialize - Check for share URL on load
+                init() {
+                    // Small delay to ensure Alpine is fully initialized
+                    setTimeout(() => {
+                        this.parseShareUrl();
+                    }, 100);
+                },
+                
+                generateQR(slip) {
+                    if (!this.showIpsCode) return '';
+                    
+                    // Transliterate Serbian Cyrillic to ASCII Latin
+                    const transliterate = (text) => {
+                        if (!text) return '';
+                        const cyrToLat = {
+                            'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'ђ': 'dj', 'е': 'e', 'ж': 'z', 'з': 'z',
+                            'и': 'i', 'ј': 'j', 'к': 'k', 'л': 'l', 'љ': 'lj', 'м': 'm', 'н': 'n', 'њ': 'nj', 'о': 'o',
+                            'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'ћ': 'c', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'c',
+                            'ч': 'c', 'џ': 'dz', 'ш': 's',
+                            'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Ђ': 'Dj', 'Е': 'E', 'Ж': 'Z', 'З': 'Z',
+                            'И': 'I', 'Ј': 'J', 'К': 'K', 'Л': 'L', 'Љ': 'Lj', 'М': 'M', 'Н': 'N', 'Њ': 'Nj', 'О': 'O',
+                            'П': 'P', 'Р': 'R', 'С': 'S', 'Т': 'T', 'Ћ': 'C', 'У': 'U', 'Ф': 'F', 'Х': 'H', 'Ц': 'C',
+                            'Ч': 'C', 'Џ': 'Dz', 'Ш': 'S'
+                        };
+                        return text.split('').map(c => cyrToLat[c] || c).join('');
+                    };
+                    
+                    try {
+                        // Parse amount (remove = and spaces, convert comma to dot)
+                        let amount = slip.amount || '';
+                        amount = amount.replace(/^=\s*/, '').replace(/\./g, '').replace(',', '.');
+                        const amountNum = parseFloat(amount) || 0;
+                        
+                        // Clean account number (remove dashes) and pad to 18 digits
+                        let account = (slip.accountNumber || '').replace(/-/g, '');
+                        if (account.length >= 2 && account.length < 18) {
+                            account = account.substring(0, 2) + account.substring(2).padStart(16, '0');
+                        }
+                        
+                        if (!account && amountNum <= 0) {
+                            return '<div style="width: 70px; height: 70px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #999; text-align: center;">No account<br>or amount</div>';
+                        }
+                        if (!account) {
+                            return '<div style="width: 70px; height: 70px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #999; text-align: center;">No account</div>';
+                        }
+                        if (amountNum <= 0) {
+                            return '<div style="width: 70px; height: 70px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #999; text-align: center;">No amount</div>';
+                        }
+                        
+                        // Build minimal IPS QR code string with transliterated text
+                        const fields = [
+                            'K:PR',
+                            'V:01',
+                            'C:1',
+                            'R:' + account,
+                            'N:' + transliterate(slip.payer).substring(0, 30),
+                            'I:RSD' + amountNum.toFixed(2).replace('.', ',')
+                        ];
+                        
+                        // Only add optional fields if they exist
+                        if (slip.receiver) fields.push('P:' + transliterate(slip.receiver).substring(0, 35));
+                        if (slip.paymentCode) fields.push('SF:' + slip.paymentCode.substring(0, 3));
+                        if (slip.purpose) fields.push('S:' + transliterate(slip.purpose).substring(0, 35));
+                        if (slip.referenceNumber) fields.push('RO:' + slip.model + slip.referenceNumber.substring(0, 20));
+                        
+                        const qrString = fields.join('|');
+                        console.log('Generated IPS QR string:', qrString);
+                        
+                        // Create a unique ID for this QR code
+                        const qrId = 'qr-' + Math.random().toString(36).substr(2, 9);
+                        
+                        // Return a placeholder that will be replaced after render
+                        setTimeout(() => {
+                            const container = document.getElementById(qrId);
+                            if (container && window.QRCode) {
+                                container.innerHTML = '';
+                                new QRCode(container, {
+                                    text: qrString,
+                                    width: 135,
+                                    height: 135,
+                                    colorDark: '#000000',
+                                    colorLight: '#ffffff',
+                                    correctLevel: QRCode.CorrectLevel.M
+                                });
+                            }
+                        }, 0);
+                        
+                        return '<div id="' + qrId + '" style="width: 135px; height: 135px;"></div>';
+                    } catch (e) {
+                        console.error('QR generation error:', e);
+                        return '<div style="width: 70px; height: 70px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; font-size: 8px; color: #999;">Error</div>';
+                    }
+                }
+            };
+        }
+    </script>
+
+</body>
+</html>
