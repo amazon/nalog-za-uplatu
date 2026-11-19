@@ -14,6 +14,8 @@ A frontend-only web application for generating Serbian payment slips (Nalog za u
   - UI controls are hidden when printing
   - Enlarged 135×135 pixel QR codes for better scanning
 - **Responsive Design**: Clean, professional layout using Tailwind CSS
+- **Optional compressed sharing**: Share links remain backward compatible with
+  `/s/v1/`, while the opt-in `/s/v2/` format embeds an IPQ2-compressed IPS batch
 
 ## Usage
 
@@ -28,7 +30,12 @@ A frontend-only web application for generating Serbian payment slips (Nalog za u
 
 ```
 ├── src/
-│   └── index.html          # Main application file
+│   ├── index.html          # Main application page
+│   ├── main.ts             # Browser module entry point
+│   ├── share-links.ts      # v1 and optional IPQ2 v2 share links
+│   └── ipq2/               # Browser-compatible IPQ2 codec
+├── doc/
+│   └── share-link-formats-and-compression.md # Detailed specification of share links & codecs
 └── openspec/
     └── changes/
         └── frontend-payslip-generator/
@@ -45,10 +52,21 @@ A frontend-only web application for generating Serbian payment slips (Nalog za u
 - **Tailwind CSS** (https://tailwindcss.com/) - Utility-first CSS framework
 - **AlpineJS** (https://alpinejs.dev/) - Lightweight JavaScript framework for reactivity
 - **QRCode.js** (https://github.com/davidshimjs/qrcodejs) - QR code generation library
+- **zstdify** - Browser-compatible Zstandard codec with raw dictionary support
+- **esbuild** - TypeScript browser bundling
 
 ## Deployment
 
-This is a static frontend application. Simply host the files on any static web server or GitHub Pages. No build step or backend server is required.
+This remains a static frontend application with no backend. Compile the
+embedded vocabulary and browser module before serving it:
+
+```bash
+npm ci
+npm run build
+jekyll serve --source src/
+```
+
+GitHub Pages should run `npm run build` before the Jekyll build.
 
 ## Serbian IPS QR Code Format
 
@@ -57,3 +75,27 @@ The QR codes follow the NBS (Nacionalna banka Srbije) IPS standard:
 - Account numbers are padded to 18 digits
 - Cyrillic characters are transliterated to ASCII Latin
 - Amount uses comma as decimal separator (e.g., `RSD1234,56`)
+
+## Share Link Formats & Compression
+
+The application supports generating sharable URLs containing multi-slip payment batches:
+
+- **Legacy v1 Links (`/s/v1/<payload>`)**:
+  - The default backward-compatible format.
+  - Applies line-by-line field deduplication (**sparsification**), omitting fields that match the preceding slip.
+  - Encodes the resulting sparse UTF-8 text as URL-safe Base64 without padding.
+  - Requires no WebAssembly or external decoders.
+
+- **Compressed v2 Links (`/s/v2/<payload>`)**:
+  - Activated using the **"Short link (IPQ2)"** checkbox.
+  - Compresses the canonical IPS batch using **IPQ2** (Zstandard level 19 with a 32 KB domain dictionary and vocabulary tokenization).
+  - Encodes the resulting binary archive as URL-safe Base64 without padding.
+  - Reduces URL lengths by **~63%** on typical 4-slip tax batches (646 characters down to 242 characters), preventing URLs from exceeding chat or browser limits on larger batches.
+
+### Underlying Compression Codecs
+
+- **IPQ1** ([IPQ1.md](IPQ1.md)): Specialized domain codec using 7-trit field-state delta encoding, zigzag integers, move-to-front text caches, packed 6-bit reference codes, and raw DEFLATE with a preset Serbian payment dictionary.
+- **IPQ2** ([IPQ2.md](IPQ2.md)): Evolution of IPQ1 using Zstandard dictionary compression, a 2,831-term word-boundary token table derived from Serbian and English payment terms, an 8-byte vocabulary integrity fingerprint, and 3 adaptive representation modes (raw text, semantic, and tokenized semantic).
+
+For the complete technical specification of both wire formats and compression pipelines, see [doc/share-link-formats-and-compression.md](doc/share-link-formats-and-compression.md).
+

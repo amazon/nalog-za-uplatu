@@ -1,0 +1,5 @@
+K:PR|V:01|C:1|R:840000071112284332|N:SERGEI TUCHKIN PR BEOGRAD|I:RSD43400,00|P:Poreska uprava Republike Srbije|SF:253|S:Porez na prihode od samostalne del|RO:977901890000007084939M
+K:PR|V:01|C:1|R:265110031000419865|N:Udruženje reumatologa Srbije|I:RSD1000,00|SF:289|S:Članarina za 2025
+K:PR|V:01|C:1|R:840000003277384524|N:Akademija strukovnih studija Šumadija - Kragujevac|I:RSD5000,00|SF:289|S:Naknada za prijemni ispit
+K:PR|V:01|C:1|R:840000074222184357|N:Republička administrativna taksa|I:RSD820,00|SF:253|S:Taksa za uverenje|RO:9793034
+K:PR|V:01|C:1|R:840000074222184357|N:Republička administrativna taksa|I:RSD760,00|SF:253|S:Taksa za međunarodni izvod|RO:9793034

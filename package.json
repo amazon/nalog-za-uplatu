@@ -1,0 +1,22 @@
+{
+  "name": "nalog-za-uplatu-ipq2",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate:vocabulary": "tsx src/build/compile-vocabulary.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run generate:vocabulary && vitest run",
+    "build": "npm run generate:vocabulary && npm run typecheck && esbuild src/main.ts --bundle --minify --format=esm --platform=browser --target=es2022 --outfile=src/assets/ipq2.js"
+  },
+  "dependencies": {
+    "zstdify": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "esbuild": "^0.28.1",
+    "tsx": "^4.23.1",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.10"
+  }
+}

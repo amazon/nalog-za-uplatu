@@ -1,0 +1,4 @@
+K:PR|V:01|C:1|R:265110031000419865|N:Udruženje reumatologa Srbije|I:RSD1000,00|SF:289|S:Članarina za 2025
+K:PR|V:01|C:1|R:160600000162640434|N:PD Železničar 1948|I:RSD4300,00|SF:289|S:Članarina za 2025|RO:00CLANARINA-000000
+K:PR|V:01|C:1|R:325950070008871912|N:PSK Pobeda|I:RSD2400,00|SF:289|S:Članarina, kartica i dostava|RO:00CLA-000000
+K:PR|V:01|C:1|R:840000000143666634|N:Arhitektonski fakultet u Beogradu|I:RSD2200,00|SF:289|S:Administrativni troškovi upisa

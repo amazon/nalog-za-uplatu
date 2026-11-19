@@ -1,0 +1,6 @@
+K:PR|V:01|C:1|R:840000071112284332|N:SERGEI TUCHKIN PR BEOGRAD|I:RSD43400,00|P:Poreska uprava Republike Srbije|SF:253|S:Porez na prihode od samostalne del|RO:977901890000007084939M
+K:PR|V:01|C:1|R:160600000162640434|N:PD Železničar 1948|I:RSD1200,00|SF:289|S:Članarina za 2025|RO:00CLANARINA-000000
+K:PR|V:01|C:1|R:325950070008871912|N:PSK Pobeda|I:RSD2400,00|SF:289|S:Članarina, kartica i dostava|RO:00CLA-000000
+K:PR|V:01|C:1|R:840000003277384524|N:Akademija strukovnih studija Šumadija - Kragujevac|I:RSD5000,00|SF:289|S:Naknada za prijemni ispit
+K:PR|V:01|C:1|R:840000074222184357|N:Republička administrativna taksa|I:RSD450,00|SF:253|S:Taksa za domaći izvod|RO:9793034
+K:PR|V:01|C:1|R:840000074222184357|N:Republička administrativna taksa|I:RSD820,00|SF:253|S:Taksa za uverenje|RO:9793034

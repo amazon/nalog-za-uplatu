@@ -1,0 +1,3 @@
+K:PR|V:01|C:1|R:160000000037495717|N:Udruženje aktuara Srbije|I:RSD4000,00|SF:289|S:Članarina redovni član
+K:PR|V:01|C:1|R:160600000162640434|N:PD Železničar 1948|I:RSD1200,00|SF:289|S:Članarina za 2025|RO:00CLANARINA-000000
+K:PR|V:01|C:1|R:840000003277384524|N:Akademija strukovnih studija Šumadija - Kragujevac|I:RSD4000,00|SF:289|S:Naknada za upis

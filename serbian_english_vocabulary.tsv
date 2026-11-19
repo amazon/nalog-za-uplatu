@@ -1,0 +1,415 @@
+category	sr_latn	sr_cyrl	en
+geo.city	Beograd	Београд	Belgrade
+geo.city	Novi Sad	Нови Сад	Novi Sad
+geo.city	Niš	Ниш	Nis
+geo.city	Kragujevac	Крагујевац	Kragujevac
+geo.city	Subotica	Суботица	Subotica
+geo.city	Zrenjanin	Зрењанин	Zrenjanin
+geo.city	Pančevo	Панчево	Pancevo
+geo.city	Čačak	Чачак	Cacak
+geo.city	Kraljevo	Краљево	Kraljevo
+geo.city	Novi Pazar	Нови Пазар	Novi Pazar
+geo.city	Smederevo	Смедерево	Smederevo
+geo.city	Leskovac	Лесковац	Leskovac
+geo.city	Užice	Ужице	Uzice
+geo.city	Vranje	Врање	Vranje
+geo.city	Valjevo	Ваљево	Valjevo
+geo.city	Kruševac	Крушевац	Krusevac
+geo.city	Šabac	Шабац	Sabac
+geo.city	Požarevac	Пожаревац	Pozarevac
+geo.city	Sombor	Сомбор	Sombor
+geo.city	Pirot	Пирот	Pirot
+geo.city	Zaječar	Зајечар	Zajecar
+geo.city	Kikinda	Кикинда	Kikinda
+geo.city	Sremska Mitrovica	Сремска Митровица	Sremska Mitrovica
+geo.city	Jagodina	Јагодина	Jagodina
+geo.city	Bor	Бор	Bor
+geo.city	Loznica	Лозница	Loznica
+geo.city	Prokuplje	Прокупље	Prokuplje
+geo.town	Aranđelovac	Аранђеловац	Arandjelovac
+geo.town	Bačka Palanka	Бачка Паланка	Backa Palanka
+geo.town	Bačka Topola	Бачка Топола	Backa Topola
+geo.town	Bajina Bašta	Бајина Башта	Bajina Basta
+geo.town	Bečej	Бечеј	Becej
+geo.town	Bela Crkva	Бела Црква	Bela Crkva
+geo.town	Bujanovac	Бујановац	Bujanovac
+geo.town	Ćuprija	Ћуприја	Cuprija
+geo.town	Despotovac	Деспотовац	Despotovac
+geo.town	Gornji Milanovac	Горњи Милановац	Gornji Milanovac
+geo.town	Inđija	Инђија	Indjija
+geo.town	Ivanjica	Ивањица	Ivanjica
+geo.town	Kanjiža	Кањижа	Kanjiza
+geo.town	Knjaževac	Књажевац	Knjazevac
+geo.town	Kosjerić	Косјерић	Kosjeric
+geo.town	Kovin	Ковин	Kovin
+geo.town	Kula	Кула	Kula
+geo.town	Lazarevac	Лазаревац	Lazarevac
+geo.town	Lučani	Лучани	Lucani
+geo.town	Mladenovac	Младеновац	Mladenovac
+geo.town	Negotin	Неготин	Negotin
+geo.town	Nova Varoš	Нова Варош	Nova Varos
+geo.town	Obrenovac	Обреновац	Obrenovac
+geo.town	Paraćin	Параћин	Paracin
+geo.town	Požega	Пожега	Pozega
+geo.town	Priboj	Прибој	Priboj
+geo.town	Prijepolje	Пријепоље	Prijepolje
+geo.town	Raška	Рашка	Raska
+geo.town	Ruma	Рума	Ruma
+geo.town	Senta	Сента	Senta
+geo.town	Sjenica	Сјеница	Sjenica
+geo.town	Smederevska Palanka	Смедеревска Паланка	Smederevska Palanka
+geo.town	Temerin	Темерин	Temerin
+geo.town	Trstenik	Трстеник	Trstenik
+geo.town	Tutin	Тутин	Tutin
+geo.town	Velika Plana	Велика Плана	Velika Plana
+geo.town	Vrbas	Врбас	Vrbas
+geo.town	Vrnjačka Banja	Врњачка Бања	Vrnjacka Banja
+geo.town	Vršac	Вршац	Vrsac
+geo.town	Aleksinac	Алексинац	Aleksinac
+geo.town	Apatin	Апатин	Apatin
+geo.town	Kuršumlija	Куршумлија	Kursumlija
+geo.town	Lebane	Лебане	Lebane
+geo.town	Sokobanja	Сокобања	Sokobanja
+geo.town	Surdulica	Сурдулица	Surdulica
+geo.town	Topola	Топола	Topola
+geo.district	Severnobački okrug	Севернобачки округ	North Backa District
+geo.district	Srednjobanatski okrug	Средњобанатски округ	Central Banat District
+geo.district	Severnobanatski okrug	Севернобанатски округ	North Banat District
+geo.district	Južnobanatski okrug	Јужнобанатски округ	South Banat District
+geo.district	Zapadnobački okrug	Западнобачки округ	West Backa District
+geo.district	Južnobački okrug	Јужнобачки округ	South Backa District
+geo.district	Sremski okrug	Сремски округ	Srem District
+geo.district	Mačvanski okrug	Мачвански округ	Macva District
+geo.district	Kolubarski okrug	Колубарски округ	Kolubara District
+geo.district	Podunavski okrug	Подунавски округ	Podunavlje District
+geo.district	Braničevski okrug	Браничевски округ	Branicevo District
+geo.district	Šumadijski okrug	Шумадијски округ	Sumadija District
+geo.district	Pomoravski okrug	Поморавски округ	Pomoravlje District
+geo.district	Borski okrug	Борски округ	Bor District
+geo.district	Zaječarski okrug	Зајечарски округ	Zajecar District
+geo.district	Zlatiborski okrug	Златиборски округ	Zlatibor District
+geo.district	Moravički okrug	Моравички округ	Moravica District
+geo.district	Raški okrug	Рашки округ	Raska District
+geo.district	Rasinski okrug	Расински округ	Rasina District
+geo.district	Nišavski okrug	Нишавски округ	Nisava District
+geo.district	Toplički okrug	Топлички округ	Toplica District
+geo.district	Pirotski okrug	Пиротски округ	Pirot District
+geo.district	Jablanički okrug	Јабланички округ	Jablanica District
+geo.district	Pčinjski okrug	Пчињски округ	Pcinja District
+geo.district	Stari grad	Стари град	Old Town
+geo.district	Novi Beograd	Нови Београд	New Belgrade
+geo.district	Savski venac	Савски венац	Savski Venac
+geo.district	Vračar	Врачар	Vracar
+geo.district	Voždovac	Вождовац	Vozdovac
+geo.district	Zvezdara	Звездара	Zvezdara
+geo.district	Palilula	Палилула	Palilula
+geo.district	Čukarica	Чукарица	Cukarica
+geo.district	Rakovica	Раковица	Rakovica
+geo.district	Zemun	Земун	Zemun
+geo.district	Surčin	Сурчин	Surcin
+geo.district	Grocka	Гроцка	Grocka
+geo.district	Liman	Лиман	Liman
+geo.district	Detelinara	Детелинара	Detelinara
+geo.district	Podbara	Подбара	Podbara
+geo.district	Petrovaradin	Петроварадин	Petrovaradin
+geo.district	Medijana	Медијана	Medijana
+geo.district	Pantelej	Пантелеј	Pantelej
+geo.district	Crveni krst	Црвени крст	Red Cross
+geo.street_type	ulica	улица	street
+geo.street_type	bulevar	булевар	boulevard
+geo.street_type	trg	трг	square
+geo.street_type	put	пут	road
+geo.street_type	kej	кеј	quay
+geo.street_type	aleja	алеја	avenue
+geo.street_type	sokak	сокак	lane
+geo.street_type	autoput	аутопут	motorway
+geo.street	Knez Mihailova	Кнез Михаилова	Knez Mihailova Street
+geo.street	Bulevar kralja Aleksandra	Булевар краља Александра	King Alexander Boulevard
+geo.street	Kneza Miloša	Кнеза Милоша	Prince Milos Street
+geo.street	Cara Dušana	Цара Душана	Emperor Dusan Street
+geo.street	Nemanjina	Немањина	Nemanjina Street
+geo.street	Terazije	Теразије	Terazije
+geo.street	Takovska	Таковска	Takovska Street
+geo.street	Resavska	Ресавска	Resavska Street
+geo.street	Makenzijeva	Макензијева	MacKenzie Street
+geo.street	Ustanička	Устаничка	Ustanicka Street
+geo.street	Vojvode Stepe	Војводе Степе	Vojvoda Stepa Street
+geo.street	Jurija Gagarina	Јурија Гагарина	Yuri Gagarin Street
+geo.street	Omladinskih brigada	Омладинских бригада	Youth Brigades Street
+geo.street	Bulevar Mihajla Pupina	Булевар Михајла Пупина	Mihajlo Pupin Boulevard
+geo.street	Požeška	Пожешка	Pozeska Street
+geo.street	Zmaj Jovina	Змај Јовина	Zmaj Jovina Street
+geo.street	Dunavska	Дунавска	Danube Street
+geo.street	Futoška	Футошка	Futoska Street
+geo.street	Bulevar oslobođenja	Булевар ослобођења	Liberation Boulevard
+geo.street	Bulevar Evrope	Булевар Европе	Europe Boulevard
+geo.street	Maksima Gorkog	Максима Горког	Maxim Gorky Street
+geo.street	Bulevar cara Lazara	Булевар цара Лазара	Emperor Lazar Boulevard
+geo.street	Bulevar Nemanjića	Булевар Немањића	Nemanjic Boulevard
+geo.street	Obrenovićeva	Обреновићева	Obrenoviceva Street
+geo.street	Voždova	Вождова	Vozdova Street
+geo.street	Kralja Petra I	Краља Петра I	King Peter I Street
+geo.street	Glavna	Главна	Main Street
+geo.street	Svetozara Miletića	Светозара Милетића	Svetozar Miletic Street
+geo.street	Narodnog fronta	Народног фронта	People's Front Street
+geo.street	Patrijarha Pavla	Патријарха Павла	Patriarch Pavle Street
+geo.street	Karađorđeva	Карађорђева	Karadjordjeva Street
+organization.type	udruženje	удружење	association
+organization.type	savez	савез	federation
+organization.type	komora	комора	chamber
+organization.type	fondacija	фондација	foundation
+organization.type	zadužbina	задужбина	endowment
+organization.type	zadruga	задруга	cooperative
+organization.type	predškolska ustanova	предшколска установа	preschool institution
+organization.type	vrtić	вртић	kindergarten
+organization.type	osnovna škola	основна школа	primary school
+organization.type	srednja škola	средња школа	secondary school
+organization.type	gimnazija	гимназија	grammar school
+organization.type	stručna škola	стручна школа	vocational school
+organization.type	muzička škola	музичка школа	music school
+organization.type	visoka škola	висока школа	college
+organization.type	akademija strukovnih studija	академија струковних студија	academy of applied studies
+organization.type	fakultet	факултет	faculty
+organization.type	univerzitet	универзитет	university
+organization.type	institut	институт	institute
+organization.type	istraživački centar	истраживачки центар	research center
+organization.type	studentski centar	студентски центар	student center
+organization.type	dom učenika	дом ученика	student residence
+organization.type	dom zdravlja	дом здравља	community health center
+organization.type	opšta bolnica	општа болница	general hospital
+organization.type	klinički centar	клинички центар	clinical center
+organization.type	apoteka	апотека	pharmacy
+organization.type	javno preduzeće	јавно предузеће	public enterprise
+organization.type	javno komunalno preduzeće	јавно комунално предузеће	public utility company
+organization.type	privredno društvo	привредно друштво	company
+organization.type	preduzetnik	предузетник	sole proprietor
+organization.type	agencija	агенција	agency
+organization.type	centar	центар	center
+organization.type	zavod	завод	institute
+organization.type	muzej	музеј	museum
+organization.type	biblioteka	библиотека	library
+organization.type	pozorište	позориште	theater
+organization.type	sportski klub	спортски клуб	sports club
+organization.type	turistička organizacija	туристичка организација	tourism organization
+organization.government	Republika Srbija	Република Србија	Republic of Serbia
+organization.government	Narodna banka Srbije	Народна банка Србије	National Bank of Serbia
+organization.government	Poreska uprava	Пореска управа	Tax Administration
+organization.government	Uprava za trezor	Управа за трезор	Treasury Administration
+organization.government	Uprava carina	Управа царина	Customs Administration
+organization.government	Agencija za privredne registre	Агенција за привредне регистре	Business Registers Agency
+organization.government	Republički fond za zdravstveno osiguranje	Републички фонд за здравствено осигурање	National Health Insurance Fund
+organization.government	Republički fond za penzijsko i invalidsko osiguranje	Републички фонд за пензијско и инвалидско осигурање	Pension and Disability Insurance Fund
+organization.government	Republički geodetski zavod	Републички геодетски завод	Republic Geodetic Authority
+organization.government	Ministarstvo finansija	Министарство финансија	Ministry of Finance
+organization.government	Ministarstvo prosvete	Министарство просвете	Ministry of Education
+organization.government	Ministarstvo unutrašnjih poslova	Министарство унутрашњих послова	Ministry of Internal Affairs
+organization.government	Republička administrativna taksa	Републичка административна такса	Republic administrative fee
+organization.government	gradska uprava	градска управа	city administration
+organization.government	opštinska uprava	општинска управа	municipal administration
+organization.government	mesna zajednica	месна заједница	local community office
+organization.government	policijska uprava	полицијска управа	police administration
+organization.government	osnovni sud	основни суд	basic court
+organization.government	viši sud	виши суд	higher court
+organization.government	privredni sud	привредни суд	commercial court
+organization.government	javno tužilaštvo	јавно тужилаштво	public prosecutor's office
+organization.government	javni beležnik	јавни бележник	notary public
+organization.government	katastar nepokretnosti	катастар непокретности	real estate cadastre
+payment.tax	porez	порез	tax
+payment.tax	porez na dodatu vrednost	порез на додату вредност	value added tax
+payment.tax	porez na dohodak građana	порез на доходак грађана	personal income tax
+payment.tax	porez na dobit pravnih lica	порез на добит правних лица	corporate income tax
+payment.tax	porez na imovinu	порез на имовину	property tax
+payment.tax	porez na prenos apsolutnih prava	порез на пренос апсолутних права	property transfer tax
+payment.tax	porez na prihode od samostalne delatnosti	порез на приходе од самосталне делатности	self-employment income tax
+payment.tax	akciza	акциза	excise duty
+payment.tax	carina	царина	customs duty
+payment.tax	doprinos	допринос	social contribution
+payment.tax	doprinos za zdravstveno osiguranje	допринос за здравствено осигурање	health insurance contribution
+payment.tax	doprinos za penzijsko i invalidsko osiguranje	допринос за пензијско и инвалидско осигурање	pension and disability contribution
+payment.tax	doprinos za slučaj nezaposlenosti	допринос за случај незапослености	unemployment contribution
+payment.tax	javni prihodi	јавни приходи	public revenue
+payment.fee	taksa	такса	fee
+payment.fee	administrativna taksa	административна такса	administrative fee
+payment.fee	republička administrativna taksa	републичка административна такса	republic administrative fee
+payment.fee	sudska taksa	судска такса	court fee
+payment.fee	lokalna komunalna taksa	локална комунална такса	local utility fee
+payment.fee	naknada	накнада	charge
+payment.fee	naknada za uslugu	накнада за услугу	service charge
+payment.fee	naknada za upis	накнада за упис	enrollment fee
+payment.fee	naknada za prijemni ispit	накнада за пријемни испит	entrance examination fee
+payment.fee	naknada za izdavanje dokumenta	накнада за издавање документа	document issuance fee
+payment.fee	članarina	чланарина	membership fee
+payment.fee	članarina za tekuću godinu	чланарина за текућу годину	membership fee for the current year
+payment.fee	školarina	школарина	tuition fee
+payment.fee	prva rata školarine	прва рата школарине	first tuition installment
+payment.fee	kotizacija	котизација	registration fee
+payment.fee	registracija	регистрација	registration
+payment.fee	registracija takmičara	регистрација такмичара	competitor registration
+payment.fee	upisnina	уписнина	enrollment charge
+payment.fee	boravišna taksa	боравишна такса	tourist tax
+payment.fee	naknada za zaštitu životne sredine	накнада за заштиту животне средине	environmental protection fee
+payment.service	uplata	уплата	payment
+payment.service	isplata	исплата	payout
+payment.service	prenos sredstava	пренос средстава	funds transfer
+payment.service	svrha plaćanja	сврха плаћања	payment purpose
+payment.service	plaćanje računa	плаћање рачуна	bill payment
+payment.service	račun za električnu energiju	рачун за електричну енергију	electricity bill
+payment.service	račun za vodu	рачун за воду	water bill
+payment.service	račun za gas	рачун за гас	gas bill
+payment.service	račun za grejanje	рачун за грејање	heating bill
+payment.service	komunalne usluge	комуналне услуге	utility services
+payment.service	telefonske usluge	телефонске услуге	telephone services
+payment.service	internet usluge	интернет услуге	internet services
+payment.service	održavanje zgrade	одржавање зграде	building maintenance
+payment.service	zakupnina	закупнина	rent
+payment.service	osiguranje	осигурање	insurance
+payment.service	premija osiguranja	премија осигурања	insurance premium
+payment.service	donacija	донација	donation
+payment.service	sponzorstvo	спонзорство	sponsorship
+payment.service	avans	аванс	advance payment
+payment.service	rata	рата	installment
+payment.service	refundacija	рефундација	refund
+payment.service	povraćaj sredstava	повраћај средстава	refund of funds
+payment.service	dugovanje	дуговање	amount due
+payment.service	kamata	камата	interest
+payment.service	zatezna kamata	затезна камата	default interest
+payment.service	opomena	опомена	payment reminder
+payment.service	izvršenje	извршење	enforcement
+payment.service	kazna	казна	fine
+payment.service	novčana kazna	новчана казна	monetary fine
+payment.service	prijava ispita	пријава испита	exam registration
+payment.service	obnova dozvole za rad	обнова дозволе за рад	license renewal
+payment.service	izdavanje dozvole	издавање дозволе	license issuance
+payment.service	izdavanje potvrde	издавање потврде	certificate issuance
+payment.service	izdavanje uverenja	издавање уверења	certificate issuance
+payment.service	izvod iz matične knjige	извод из матичне књиге	civil registry extract
+payment.service	domaći izvod	домаћи извод	domestic extract
+payment.service	međunarodni izvod	међународни извод	international extract
+payment.service	troškovi upisa	трошкови уписа	enrollment costs
+payment.service	administrativni troškovi	административни трошкови	administrative costs
+payment.service	obrada zahteva	обрада захтева	application processing
+payment.service	rezervacija	резервација	reservation
+payment.service	dostava	достава	delivery
+payment.service	pretplata	претплата	subscription
+payment.service	humanitarna pomoć	хуманитарна помоћ	humanitarian aid
+person.first.male	Aleksandar	Александар	Aleksandar
+person.first.male	Aleksa	Алекса	Aleksa
+person.first.male	Andrej	Андреј	Andrej
+person.first.male	Bojan	Бојан	Bojan
+person.first.male	Boris	Борис	Boris
+person.first.male	Branislav	Бранислав	Branislav
+person.first.male	Dejan	Дејан	Dejan
+person.first.male	Dragan	Драган	Dragan
+person.first.male	Dušan	Душан	Dusan
+person.first.male	Đorđe	Ђорђе	Djordje
+person.first.male	Filip	Филип	Filip
+person.first.male	Goran	Горан	Goran
+person.first.male	Ivan	Иван	Ivan
+person.first.male	Jovan	Јован	Jovan
+person.first.male	Lazar	Лазар	Lazar
+person.first.male	Luka	Лука	Luka
+person.first.male	Marko	Марко	Marko
+person.first.male	Milan	Милан	Milan
+person.first.male	Miloš	Милош	Milos
+person.first.male	Mihajlo	Михајло	Mihajlo
+person.first.male	Nemanja	Немања	Nemanja
+person.first.male	Nikola	Никола	Nikola
+person.first.male	Ognjen	Огњен	Ognjen
+person.first.male	Pavle	Павле	Pavle
+person.first.male	Petar	Петар	Petar
+person.first.male	Predrag	Предраг	Predrag
+person.first.male	Rade	Раде	Rade
+person.first.male	Radovan	Радован	Radovan
+person.first.male	Saša	Саша	Sasa
+person.first.male	Slobodan	Слободан	Slobodan
+person.first.male	Stefan	Стефан	Stefan
+person.first.male	Strahinja	Страхиња	Strahinja
+person.first.male	Uroš	Урош	Uros
+person.first.male	Vasilije	Василије	Vasilije
+person.first.male	Veljko	Вељко	Veljko
+person.first.male	Vladimir	Владимир	Vladimir
+person.first.male	Vuk	Вук	Vuk
+person.first.male	Zoran	Зоран	Zoran
+person.first.male	Željko	Жељко	Zeljko
+person.first.female	Aleksandra	Александра	Aleksandra
+person.first.female	Ana	Ана	Ana
+person.first.female	Anđela	Анђела	Andjela
+person.first.female	Bojana	Бојана	Bojana
+person.first.female	Danijela	Данијела	Danijela
+person.first.female	Dragana	Драгана	Dragana
+person.first.female	Gordana	Гордана	Gordana
+person.first.female	Ivana	Ивана	Ivana
+person.first.female	Jelena	Јелена	Jelena
+person.first.female	Jovana	Јована	Jovana
+person.first.female	Katarina	Катарина	Katarina
+person.first.female	Kristina	Кристина	Kristina
+person.first.female	Ljubica	Љубица	Ljubica
+person.first.female	Marija	Марија	Marija
+person.first.female	Milena	Милена	Milena
+person.first.female	Milica	Милица	Milica
+person.first.female	Mina	Мина	Mina
+person.first.female	Mirjana	Мирјана	Mirjana
+person.first.female	Nataša	Наташа	Natasa
+person.first.female	Nevena	Невена	Nevena
+person.first.female	Nikolina	Николина	Nikolina
+person.first.female	Sanja	Сања	Sanja
+person.first.female	Sara	Сара	Sara
+person.first.female	Snežana	Снежана	Snezana
+person.first.female	Sofija	Софија	Sofija
+person.first.female	Tamara	Тамара	Tamara
+person.first.female	Teodora	Теодора	Teodora
+person.first.female	Tijana	Тијана	Tijana
+person.first.female	Vesna	Весна	Vesna
+person.first.female	Zorana	Зорана	Zorana
+person.first.female	Zorica	Зорица	Zorica
+person.first.female	Željka	Жељка	Zeljka
+person.surname	Jovanović	Јовановић	Jovanovic
+person.surname	Petrović	Петровић	Petrovic
+person.surname	Nikolić	Николић	Nikolic
+person.surname	Marković	Марковић	Markovic
+person.surname	Đorđević	Ђорђевић	Djordjevic
+person.surname	Stojanović	Стојановић	Stojanovic
+person.surname	Ilić	Илић	Ilic
+person.surname	Stanković	Станковић	Stankovic
+person.surname	Pavlović	Павловић	Pavlovic
+person.surname	Milošević	Милошевић	Milosevic
+person.surname	Popović	Поповић	Popovic
+person.surname	Mladenović	Младеновић	Mladenovic
+person.surname	Živković	Живковић	Zivkovic
+person.surname	Krstić	Крстић	Krstic
+person.surname	Kostić	Костић	Kostic
+person.surname	Simić	Симић	Simic
+person.surname	Lazić	Лазић	Lazic
+person.surname	Ristić	Ристић	Ristic
+person.surname	Stefanović	Стефановић	Stefanovic
+person.surname	Mitrović	Митровић	Mitrovic
+person.surname	Radovanović	Радовановић	Radovanovic
+person.surname	Radulović	Радуловић	Radulovic
+person.surname	Vasić	Васић	Vasic
+person.surname	Matić	Матић	Matic
+person.surname	Todorović	Тодоровић	Todorovic
+person.surname	Savić	Савић	Savic
+person.surname	Maksimović	Максимовић	Maksimovic
+person.surname	Obradović	Обрадовић	Obradovic
+person.surname	Kovačević	Ковачевић	Kovacevic
+person.surname	Dimitrijević	Димитријевић	Dimitrijevic
+person.surname	Lukić	Лукић	Lukic
+person.surname	Janković	Јанковић	Jankovic
+person.surname	Vuković	Вуковић	Vukovic
+person.surname	Bogdanović	Богдановић	Bogdanovic
+person.surname	Radosavljević	Радосављевић	Radosavljevic
+person.surname	Vučković	Вучковић	Vuckovic
+person.surname	Marinković	Маринковић	Marinkovic
+person.surname	Gajić	Гајић	Gajic
+person.surname	Knežević	Кнежевић	Knezevic
+person.surname	Grujić	Грујић	Grujic
+person.surname	Rakić	Ракић	Rakic
+person.surname	Ćirić	Ћирић	Ciric
+person.surname	Spasić	Спасић	Spasic
+person.surname	Babić	Бабић	Babic
+person.surname	Antić	Антић	Antic
+person.surname	Nedeljković	Недељковић	Nedeljkovic
+person.surname	Zdravković	Здравковић	Zdravkovic
+person.surname	Dabić	Дабић	Dabic
+person.surname	Trifunović	Трифуновић	Trifunovic
+person.surname	Veličković	Величковић	Velickovic

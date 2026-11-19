@@ -10,6 +10,16 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <!-- QRCode.js for rendering -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Browser IPQ2 and share-link codec -->
+    <script>
+        (function() {
+            var basePath = window.location.pathname
+                .replace(/\/s\/v\d+\/.*$/, '')
+                .replace(/\/index\.html$/, '')
+                .replace(/\/+$/, '');
+            window.shareCodecReady = import(window.location.origin + basePath + '/assets/ipq2.js');
+        })();
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap');
         
@@ -38,7 +48,6 @@
             font-family: 'Courier Prime', 'Courier New', Courier, monospace;
             font-size: 14px;
             font-weight: bold;
-            text-transform: uppercase;
             background: transparent;
             border: none;
             width: 100%;
@@ -114,7 +123,7 @@
 <body class="bg-gray-200 p-5 flex flex-col items-center min-h-screen" x-data="paymentSlips()" x-init="init()">
 
     <!-- Print Controls -->
-    <div class="print-controls bg-white px-8 py-4 rounded-lg shadow-md mb-5 sticky top-5 z-50 flex items-center gap-4 print:hidden">
+    <div class="print-controls bg-white px-8 py-4 rounded-lg shadow-md mb-5 sticky top-5 z-50 flex flex-wrap items-center gap-4 print:hidden">
         <button @click="window.print()" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-6 rounded transition-colors">
             Print Slips
         </button>
@@ -124,6 +133,12 @@
         <button @click="shareSlips()" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-6 rounded transition-colors">
             Share
         </button>
+        <div class="flex items-center gap-2 border-l pl-4">
+            <label class="flex items-center cursor-pointer" title="Use IPQ2 compression for shorter share links">
+                <input type="checkbox" x-model="shareWithIpq2" class="mr-2 w-5 h-5" aria-label="Compress share link with IPQ2">
+                <span class="font-semibold text-gray-700">Short link (IPQ2)</span>
+            </label>
+        </div>
         <div class="flex items-center gap-2 border-l pl-4">
             <label class="flex items-center cursor-pointer">
                 <input type="checkbox" x-model="showIpsCode" class="mr-2 w-5 h-5">
@@ -174,6 +189,12 @@
                                 <input type="text" x-model="slip.receiver" class="field-input w-full" placeholder="Primaoac">
                             </div>
                         </div>
+                        <div class="absolute bottom-[10mm] left-[10mm] flex flex-col w-[25%]">
+                            <div class="border-b border-black min-h-[28px] flex items-end px-1 box-border">
+                                <input type="text" x-model="slip.signature" class="field-input w-full" aria-label="Потпис платиоца">
+                            </div>
+                            <span class="mt-0.5 text-[10px] text-gray-700 leading-tight">потпис платиоца</span>
+                        </div>
                     </div>
                     
                     <!-- Right Column -->
@@ -217,6 +238,13 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="absolute bottom-[10mm] right-[50mm] flex flex-col w-[25%]">
+                            <span class="text-[10px] text-gray-700 mb-0.5 leading-tight">место и датум пријема</span>
+                            <div class="border-b border-black min-h-[28px] flex items-end px-1 box-border">
+                                <input type="text" x-model="slip.receiptPlaceAndDate" class="field-input w-full" aria-label="Место и датум пријема">
+                            </div>
+                        </div>
                         
                         <!-- IPS QR Code -->
                         <div class="mt-3 flex justify-end" x-show="showIpsCode">
@@ -238,6 +266,8 @@
         function paymentSlips() {
             return {
                 showIpsCode: false,
+                shareWithIpq2: false,
+                shareComparison: null,
                 slips: [
                     {
                         payer: '',
@@ -248,7 +278,9 @@
                         amount: '',
                         accountNumber: '',
                         model: '97',
-                        referenceNumber: ''
+                        referenceNumber: '',
+                        signature: '',
+                        receiptPlaceAndDate: ''
                     },
                 ],
                 
@@ -262,7 +294,9 @@
                         amount: '',
                         accountNumber: '',
                         model: '97',
-                        referenceNumber: ''
+                        referenceNumber: '',
+                        signature: '',
+                        receiptPlaceAndDate: ''
                     });
                 },
                 
@@ -318,79 +352,67 @@
                     if (slip.paymentCode) fields.push('SF:' + slip.paymentCode.substring(0, 3));
                     if (slip.purpose) fields.push('S:' + transliterate(slip.purpose).substring(0, 35));
                     if (slip.referenceNumber) fields.push('RO:' + slip.model + slip.referenceNumber.substring(0, 20));
-                    
+                    console.log('Generated QR string:', fields.join('|'));
                     return fields.join('|');
                 },
                 
-                // Share functionality - Sparse encode slips data
-                sparseEncodeSlips() {
-                    const qrStrings = this.slips.map(slip => this.generateQRString(slip));
-                    
-                    // Parse QR strings into field arrays
-                    const parseQR = (qr) => {
-                        const fields = {};
-                        qr.split('|').forEach(field => {
-                            const [key, value] = field.split(':');
-                            if (key && value !== undefined) fields[key] = value;
-                        });
-                        return fields;
-                    };
-                    
-                    const parsed = qrStrings.map(parseQR);
-                    const fieldOrder = ['K', 'V', 'C', 'R', 'N', 'I', 'P', 'SF', 'S', 'RO'];
-                    
-                    // Apply sparse encoding: replace duplicate values with empty string
-                    const sparse = parsed.map((fields, index) => {
-                        const prev = index > 0 ? parsed[index - 1] : null;
-                        const sparseFields = [];
-                        
-                        fieldOrder.forEach(key => {
-                            const value = fields[key] || '';
-                            const prevValue = prev ? (prev[key] || '') : null;
-                            // If same as previous, use empty string
-                            const output = (prev !== null && value === prevValue) ? '' : value;
-                            if (fields.hasOwnProperty(key) || output) {
-                                sparseFields.push(key + ':' + output);
-                            }
-                        });
-                        
-                        return sparseFields.join('|');
-                    });
-                    
-                    return sparse.join('\n');
+                canonicalShareData() {
+                    return this.slips
+                        .map(slip => this.generateQRString(slip))
+                        .join('\n');
                 },
-                
-                // Share functionality - Base64 URL-safe encode
-                base64UrlSafeEncode(str) {
-                    // Convert string to base64
-                    let base64;
-                    try {
-                        base64 = btoa(unescape(encodeURIComponent(str)));
-                    } catch (e) {
-                        // Fallback for Unicode
-                        base64 = btoa(str);
-                    }
-                    // Make URL-safe: replace + with -, / with _, remove = padding
-                    return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+
+                getAppBaseUrl() {
+                    const basePath = window.location.pathname
+                        .replace(/\/s\/v\d+\/.*$/, '')
+                        .replace(/\/index\.html$/, '')
+                        .replace(/\/+$/, '');
+                    return window.location.origin + basePath;
+                },
+
+                async buildShareUrls() {
+                    const codec = await window.shareCodecReady;
+                    const canonicalData = this.canonicalShareData();
+                    const baseUrl = this.getAppBaseUrl();
+                    return {
+                        legacy: codec.buildLegacyShareUrl(baseUrl, canonicalData),
+                        compressed: codec.buildCompressedShareUrl(baseUrl, canonicalData)
+                    };
                 },
                 
                 // Share functionality - Main share handler
                 async shareSlips() {
                     try {
-                        // Generate sparse encoded data
-                        const sparseData = this.sparseEncodeSlips();
-                        
-                        // Base64 URL-safe encode
-                        const encoded = this.base64UrlSafeEncode(sparseData);
-                        
-                        // Construct URL with version prefix
-                        const url = window.location.origin + '/s/v1/' + encoded;
+                        const codec = await window.shareCodecReady;
+                        const canonicalData = this.canonicalShareData();
+                        const baseUrl = this.getAppBaseUrl();
+                        const legacyUrl = codec.buildLegacyShareUrl(baseUrl, canonicalData);
+                        let url = legacyUrl;
+                        let message = 'URL copied to clipboard!';
+
+                        if (this.shareWithIpq2) {
+                            const compressedUrl = codec.buildCompressedShareUrl(baseUrl, canonicalData);
+                            const charactersSaved = legacyUrl.length - compressedUrl.length;
+                            const percentSaved = Math.round((charactersSaved / legacyUrl.length) * 100);
+                            this.shareComparison = {
+                                legacyLength: legacyUrl.length,
+                                compressedLength: compressedUrl.length,
+                                charactersSaved,
+                                percentSaved
+                            };
+                            url = compressedUrl;
+                            message = charactersSaved > 0
+                                ? `Compressed URL copied — ${charactersSaved} characters shorter (${percentSaved}%).`
+                                : `Compressed URL copied — ${Math.abs(charactersSaved)} characters longer for this data.`;
+                        } else {
+                            this.shareComparison = null;
+                        }
                         
                         // Copy to clipboard
                         await navigator.clipboard.writeText(url);
                         
                         // Show success toast
-                        this.showToast('URL copied to clipboard!', 'success');
+                        this.showToast(message, 'success');
                     } catch (error) {
                         console.error('Share failed:', error);
                         this.showToast('Failed to copy URL. Please try again.', 'error');
@@ -421,40 +443,20 @@
                     }, 3000);
                 },
 
-                // URL Data Decoder - Base64 URL-safe decode
-                base64UrlSafeDecode(str) {
-                    // Reverse URL-safe encoding: replace - with +, _ with /
-                    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
-                    // Add padding if needed
-                    const padLen = 4 - (base64.length % 4);
-                    if (padLen !== 4) {
-                        base64 += '='.repeat(padLen);
-                    }
-                    // Decode base64
-                    try {
-                        return decodeURIComponent(escape(atob(base64)));
-                    } catch (e) {
-                        throw new Error('Failed to decode base64 data');
-                    }
-                },
-
                 // URL Data Decoder - Parse share URL and load data
-                parseShareUrl() {
+                async parseShareUrl() {
                     const path = window.location.pathname;
-                    const match = path.match(/^\/s\/v(\d+)\/(.+)$/);
-                    
-                    if (!match) return false;
-                    
-                    const version = match[1];
-                    const encodedData = match[2];
-                    
-                    if (version !== '1') {
-                        this.showToast('Unsupported share URL version: v' + version, 'error');
-                        return false;
-                    }
-                    
                     try {
-                        const decoded = this.base64UrlSafeDecode(encodedData);
+                        const codec = await window.shareCodecReady;
+                        const parsed = codec.parseSharePath(path);
+                        if (!parsed) return false;
+                        if (parsed.version !== codec.LEGACY_SHARE_VERSION &&
+                            parsed.version !== codec.IPQ2_SHARE_VERSION) {
+                            this.showToast('Unsupported share URL version: v' + parsed.version, 'error');
+                            return false;
+                        }
+
+                        const decoded = codec.decodeShareData(parsed.version, parsed.encodedData);
                         const slips = this.decodeV1(decoded);
                         
                         if (slips.length > 0) {
@@ -480,8 +482,11 @@
                     for (const line of lines) {
                         const fields = {};
                         line.split('|').forEach(field => {
-                            const [key, value] = field.split(':');
-                            if (key) fields[key] = value || '';
+                            const separator = field.indexOf(':');
+                            if (separator > 0) {
+                                const key = field.substring(0, separator);
+                                fields[key] = field.substring(separator + 1);
+                            }
                         });
                         
                         // De-sparsify: fill empty fields from previous slip
@@ -515,9 +520,9 @@
                     // Parse account number (add dashes)
                     let accountNumber = fields.R || '';
                     if (accountNumber.length === 18) {
-                        accountNumber = accountNumber.substring(0, 3) + '-' + 
-                                       accountNumber.substring(3, 15) + '-' + 
-                                       accountNumber.substring(15, 18);
+                        accountNumber = accountNumber.substring(0, 3) + '-' +
+                                       accountNumber.substring(3, 16) + '-' +
+                                       accountNumber.substring(16, 18);
                     }
                     
                     // Parse model and reference from RO field
@@ -537,7 +542,9 @@
                         amount: amount,
                         accountNumber: accountNumber,
                         model: model,
-                        referenceNumber: referenceNumber
+                        referenceNumber: referenceNumber,
+                        signature: '',
+                        receiptPlaceAndDate: ''
                     };
                 },
 
@@ -607,6 +614,7 @@
                         if (slip.referenceNumber) fields.push('RO:' + slip.model + slip.referenceNumber.substring(0, 20));
                         
                         const qrString = fields.join('|');
+                        console.log('Generated IPS QR string:', qrString);
                         
                         // Create a unique ID for this QR code
                         const qrId = 'qr-' + Math.random().toString(36).substr(2, 9);

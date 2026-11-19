@@ -1,0 +1,5 @@
+K:PR|V:01|C:1|R:265110031000419865|N:Udruženje reumatologa Srbije|I:RSD1000,00|SF:289|S:Članarina za 2025
+K:PR|V:01|C:1|R:160000000037495717|N:Udruženje aktuara Srbije|I:RSD4000,00|SF:289|S:Članarina redovni član
+K:PR|V:01|C:1|R:325950070008871912|N:PSK Pobeda|I:RSD2400,00|SF:289|S:Članarina, kartica i dostava|RO:00CLA-000000
+K:PR|V:01|C:1|R:340000001103115746|N:Teniski savez Beograda|I:RSD2000,00|SF:289|S:Registracija takmičara 2026
+K:PR|V:01|C:1|R:840000000143666634|N:Arhitektonski fakultet u Beogradu|I:RSD2200,00|SF:289|S:Administrativni troškovi upisa

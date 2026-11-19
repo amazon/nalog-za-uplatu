@@ -1,0 +1,4 @@
+K:PR|V:01|C:1|R:840000072132584361|N:SERGEI TUCHKIN PR BEOGRAD|I:RSD44700,00|P:Poreska uprava Republike Srbije|SF:253|S:Doprinos za zdravstveno osiguranje|RO:977901890000007084939M
+K:PR|V:01|C:1|R:200300741010186247|N:Udruženje odbojkaških trenera Srbije|I:RSD6000,00|SF:289|S:Obnova dozvole za rad
+K:PR|V:01|C:1|R:160600000162640434|N:PD Železničar 1948|I:RSD3800,00|SF:289|S:Članarina za 2025|RO:00CLANARINA-000000
+K:PR|V:01|C:1|R:840000074222184357|N:Republička administrativna taksa|I:RSD450,00|SF:253|S:Taksa za domaći izvod|RO:9793034

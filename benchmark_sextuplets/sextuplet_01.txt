@@ -1,0 +1,6 @@
+K:PR|V:01|C:1|R:840000072132584361|N:SERGEI TUCHKIN PR BEOGRAD|I:RSD44700,00|P:Poreska uprava Republike Srbije|SF:253|S:Doprinos za zdravstveno osiguranje|RO:977901890000007084939M
+K:PR|V:01|C:1|R:265110031000419865|N:Udruženje reumatologa Srbije|I:RSD1000,00|SF:289|S:Članarina za 2025
+K:PR|V:01|C:1|R:160600000162640434|N:PD Železničar 1948|I:RSD4300,00|SF:289|S:Članarina za 2025|RO:00CLANARINA-000000
+K:PR|V:01|C:1|R:325950070008871912|N:PSK Pobeda|I:RSD2400,00|SF:289|S:Članarina, kartica i dostava|RO:00CLA-000000
+K:PR|V:01|C:1|R:340000001103115746|N:Teniski savez Beograda|I:RSD2000,00|SF:289|S:Registracija takmičara 2026
+K:PR|V:01|C:1|R:840000003277384524|N:Akademija strukovnih studija Šumadija - Kragujevac|I:RSD4000,00|SF:289|S:Naknada za upis

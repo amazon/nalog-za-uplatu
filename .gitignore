@@ -1,2 +1,12 @@
 media/
 _site/
+# CocoIndex Code (ccc)
+/.cocoindex_code/
+/.tokensave/
+/.playwright-cli/
+/.serena/
+/__pycache__/
+codex-session-*.md
+/node_modules/
+/coverage/
+/src/assets/ipq2.js
